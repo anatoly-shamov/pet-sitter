@@ -19,7 +19,11 @@ public class MtBeanTest {
     public void testConfig() {
         //TODO 6. Modify this class to use the new set of configuration files, created by resolving TODO 5.
         //TODO 7. Try to use wildcards as well.
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:spring/others/sample-config-01.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath*:spring/others/sample-config-01_*.xml");
+
+        for (String name : ctx.getBeanDefinitionNames()) {
+            System.out.println(name);
+        }
 
         MultipleTypesBean mtBean = (MultipleTypesBean) ctx.getBean("mtBean");
         assertNotNull(mtBean);

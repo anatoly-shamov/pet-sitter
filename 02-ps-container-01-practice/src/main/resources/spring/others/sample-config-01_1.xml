@@ -37,41 +37,4 @@
         </property>
     </bean>
 
-    <bean id="simpleBean" class="com.ps.beans.SimpleBeanImpl"/>
-
-    <bean id="collectionHolder" class="com.ps.beans.others.CollectionHolder">
-        <property name="simpleBeanList">
-            <list>
-                <ref bean="simpleBean"/>
-                <bean class="com.ps.beans.SimpleBeanImpl"/>
-                <null/>
-            </list>
-        </property>
-
-        <property name="simpleBeanSet">
-            <set>
-                <null/>
-            </set>
-        </property>
-
-        <property name="simpleBeanMap">
-            <map>
-                <entry key="one" value-ref="simpleBean"/>
-            </map>
-        </property>
-    </bean>
-
-
-    <bean id="simpleSingleton" class="com.ps.beans.others.SimpleSingleton"
-          factory-method="getInstance" />
-
-    <bean id="simpleFm" class="com.ps.beans.others.SimpleFactoryMethod"
-          factory-method="getSimpleBean" />
-
-    <bean id="simpleBeanFactory" class="com.ps.beans.others.SimpleFactoryBean"/>
-    <bean id="simpleFB" factory-bean="simpleBeanFactory"
-          factory-method="getSimpleBean" />
-
-    <bean id="smartBean" class="com.ps.beans.others.SpringFactoryBean"/>
-
 </beans>

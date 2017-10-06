@@ -6,6 +6,12 @@
 
     <!-- TODO 8. Complete the configuration with the necessary infrastructure bean-->
 
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="location">
+            <value>classpath:/db/datasource.properties</value>
+        </property>
+    </bean>
+
     <bean id="dataSource1" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${driverClassName}"/>
         <property name="url" value="${url}"/>
