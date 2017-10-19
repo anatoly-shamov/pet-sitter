@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -34,6 +35,9 @@ public class TestJdbcTemplateUserRepo {
     @Qualifier("userTemplateRepo")
     UserRepo userRepo;
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @Before
     public void setUp() {
         assertNotNull(userRepo);
@@ -45,10 +49,10 @@ public class TestJdbcTemplateUserRepo {
         assertEquals("John", user.getUsername());
     }
 
-    @Test
+    @Test(expected = EmptyResultDataAccessException.class)
     public void testNoFindById() {
         // TODO 27: Use the JdbcTemplate instance to query for a user that does not exist and make this test pass
-        User user = null;
+        User user = userRepo.findById(99099L);
         assertEquals("Darius", user.getUsername());
     }
 
@@ -56,6 +60,7 @@ public class TestJdbcTemplateUserRepo {
     public void testCount(){
         int result = 0;
         // TODO 28: Use the JdbcTemplate instance to query for the number of rows in the P_USER table
+        result = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM P_USER", Integer.class);
         assertEquals(4, result);
     }
 

@@ -5,10 +5,14 @@ import com.ps.repos.UserRepo;
 import com.ps.repos.util.UserRowMapper;
 import com.ps.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -59,13 +63,26 @@ public class JdbcNamedTemplateUserRepo implements UserRepo {
         params.put("email", email);
         String query = "insert into p_user(ID, USERNAME, PASSWORD, EMAIL) values(:id,:un,:pass, :email)";
         // add NamedParameterJdbcTemplate instance call to create an user
-        return 0;
+        return jdbcNamedTemplate.execute(query, params, new PreparedStatementCallback<Integer>() {
+            @Override
+            public Integer doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+                return ps.executeUpdate();
+            }
+        });
     }
 
     @Override
     public int deleteById(Long userId) {
         // add NamedParameterJdbcTemplate instance call to delete an user
-        return 0;
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", userId);
+        String query = "DELETE FROM P_USER WHERE ID = :id";
+        return jdbcNamedTemplate.execute(query, params, new PreparedStatementCallback<Integer>() {
+            @Override
+            public Integer doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+                return ps.executeUpdate();
+            }
+        });
     }
 
     @Override
@@ -79,7 +96,7 @@ public class JdbcNamedTemplateUserRepo implements UserRepo {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
         // add NamedParameterJdbcTemplate instance call to find an user
-        return null;
+        return jdbcNamedTemplate.queryForObject(sql, params, rowMapper);
     }
 
     @Override
@@ -115,7 +132,7 @@ public class JdbcNamedTemplateUserRepo implements UserRepo {
 
     @Override
     public String findUsernameById(Long id) {
-        String sql = "select email from p_user where ID = :id";
+        String sql = "select username from p_user where ID = :id";
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
         return jdbcNamedTemplate.queryForObject(sql, params, String.class);
