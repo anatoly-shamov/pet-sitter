@@ -11,8 +11,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Set;
@@ -56,6 +59,10 @@ public class TestJdbcTemplateUserRepo {
     }
 
     @Test
+    @SqlGroup({
+            @Sql(statements = "delete from p_user where id = 5"),
+            @Sql(statements = "delete from p_user where id = 5", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD),
+    })
     public void testCreate(){
         int result  = userRepo.createUser(5L, "Diana", "mypass", "diana@opympus.com", UserType.BOTH);
         assertEquals(1, result);
@@ -70,12 +77,17 @@ public class TestJdbcTemplateUserRepo {
     }
 
     @Test
+    @Sql(statements = "INSERT INTO P_USER(ID, USERNAME, PASSWORD, EMAIL, USER_TYPE) " +
+                        "VALUES (4, 'Rob', 'test', 'rob@pet.com', 'OWNER')",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+    )
     public void testDelete(){
         int result  = userRepo.deleteById(4L);
         assertEquals(1, result);
     }
 
     @Test
+    @Sql(statements = "drop table if exists new_p_user")
     public void testCreateTable(){
         int result  = userRepo.createTable("new_p_user");
         // table exists but is empty

@@ -3,6 +3,7 @@ package com.ps.services;
 import com.ps.config.AppConfig;
 import com.ps.config.TestDataConfig;
 import com.ps.ents.User;
+import com.ps.exceptions.MailSendingException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Created by iuliana.cosmina on 7/15/16.
@@ -66,10 +68,11 @@ public class UserServiceTest {
         assertEquals(8, count);
     }
 
-    @Test
-    public void updatePassword() {
+    @Test(expected = MailSendingException.class)
+    public void updatePassword() throws MailSendingException {
         //TODO 35. Complete definition of this test in order for it to pass
-        int res = 0; //userService.updatePassword(2L, "test_pass");
+        int res = 0;
+        res = userService.updatePassword(2L, "test_pass");
         assertEquals(1, res);
     }
 }
