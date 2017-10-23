@@ -13,6 +13,6 @@ public interface UserService {
 
     long countUsers();
 
-    void create(String email, String password, UserType userType);
+    User create(String email, String password, UserType userType);
 
 }

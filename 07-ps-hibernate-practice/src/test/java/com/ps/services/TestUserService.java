@@ -6,6 +6,7 @@ import com.ps.config.AppConfig;
 import com.ps.config.TestDataConfig;
 import com.ps.ents.Pet;
 import com.ps.ents.User;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,11 +31,12 @@ public class TestUserService {
     @Autowired
     UserService userService;
 
-    @Before
+    User defaultUser;
 
+    @Before
     public void setUp() {
         assertNotNull(userService);
-        userService.create("john.cusack@pet.com", "test", UserType.OWNER);
+        defaultUser = userService.create("john.cusack@pet.com", "test", UserType.OWNER);
     }
 
     @BeforeTransaction
@@ -45,7 +47,7 @@ public class TestUserService {
 
     @Test
     public void testFindById() {
-        User user = userService.findById(1L);
+        User user = userService.findById(defaultUser.getId());
         assertNotNull(user);
     }
 }
