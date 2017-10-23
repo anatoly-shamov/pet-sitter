@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.ps.util.RecordBuilder.buildUser;
 
 /**
@@ -39,11 +41,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void create(String email, String password, UserType userType) {
+    public User create(String email, String password, UserType userType) {
         User user = buildUser(email);
         user.setPassword(password);
         user.setUserType(userType);
         userRepo.save(user);
+        return user;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepo.findAll();
     }
 
     private void sendEmail(String email) throws MailSendingException {

@@ -2,6 +2,7 @@ package com.ps.repos.impl;
 
 import com.ps.ents.User;
 import com.ps.repos.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +20,11 @@ public class JpaUserRepo implements UserRepo {
     private EntityManager entityManager;
 
     //TODO 42. Annotate this method with the proper annotation to make the repository class pass tests in TestJpaUserRepo
+    @PersistenceContext
     void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
+
     @Override
     public List<User> findAll() {
         return entityManager.createQuery("select u from User u").getResultList();

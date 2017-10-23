@@ -15,9 +15,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.BeforeTransaction;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.ps.util.RecordBuilder.buildUser;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -34,22 +36,18 @@ public class UserServiceTest {
     @Autowired
     UserService userService;
 
-    @Before
+    User defaultUser;
 
+    @Before
     public void setUp() {
         assertNotNull(userService);
         initializer.initDb();
-    }
-
-    @BeforeTransaction
-    public void checkDbInit() {
-        long count = userService.countUsers();
-        assertEquals(1, count);
+        defaultUser = userService.create("ann.lim@example.com", "12334", UserType.SITTER);
     }
 
     @Test
     public void testFindById() {
-        User user = userService.findById(1L);
+        User user = userService.findById(defaultUser.getId());
         assertNotNull(user);
     }
 }

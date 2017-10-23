@@ -15,6 +15,8 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager;
+import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -84,14 +86,19 @@ public class TestDataConfig {
 
     @Bean
     public EntityManagerFactory entityManagerFactory(){
-        LocalContainerEntityManagerFactoryBean factoryBean = null;
+        LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         //TODO 40. Set all the properties necessary to successfully create an entityManagerFactory bean
+        factoryBean.setJpaProperties(hibernateProperties());
+        factoryBean.setDataSource(dataSource());
+        factoryBean.setPackagesToScan("com.ps.ents");
+        factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        factoryBean.afterPropertiesSet();
         return factoryBean.getNativeEntityManagerFactory();
     }
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-        return null; //TODO 41. Create an appropriate transaction manager bean
+        return new JpaTransactionManager(entityManagerFactory()); //TODO 41. Create an appropriate transaction manager bean
     }
 
     @Bean
