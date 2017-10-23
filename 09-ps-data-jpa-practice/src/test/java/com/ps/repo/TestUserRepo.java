@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -27,6 +28,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {PersistenceConfig.class, AppConfig.class})
 @ActiveProfiles("dev")
+@Transactional
 public class TestUserRepo {
 
     @Autowired
@@ -43,7 +45,7 @@ public class TestUserRepo {
         assertTrue(johns.size() == 2);
     }
 
-    @Test//(expected = EntityNotFoundException.class)
+    @Test(expected = EntityNotFoundException.class)
     public void testNoFindById() {
         User user = userRepo.getOne(99L);
         assertNull(user);
@@ -60,7 +62,7 @@ public class TestUserRepo {
 
     @Test
     public void testUpdate() {
-        User john = userRepo.findOneByUsername("john.cusack");
+        User john = userRepo.findOneByUsername("johncusack");
         john.setPassword("newpass");
         userRepo.saveAndFlush(john);
         assertEquals("newpass", john.getPassword());
@@ -70,7 +72,7 @@ public class TestUserRepo {
 
     @Test
     public void testDelete() {
-        User gigi =  userRepo.findOneByUsername("gigi.pedala");
+        User gigi =  userRepo.findOneByUsername("gigipedala");
         userRepo.delete(gigi.getId());
     }
 }

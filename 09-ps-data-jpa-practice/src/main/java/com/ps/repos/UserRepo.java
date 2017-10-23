@@ -14,12 +14,16 @@ import java.util.List;
 public interface UserRepo extends JpaRepository<User, Long> {
 
 
-    List<User> findAllByUserName(String username);
+    @Query("select u from User u where u.username like %:un%")
+    List<User> findAllByUserName(@Param("un") String username);
 
+    @Query("select u from User u where u.username = :un")
     User findOneByUsername(@Param("un") String username);
 
-    String findUsernameById(Long id);
+    @Query("select u.username from User u where u.id = :id")
+    String findUsernameById(@Param("id") Long id);
 
+    @Query("select count(u) from User u")
     long countUsers();
 
 }
