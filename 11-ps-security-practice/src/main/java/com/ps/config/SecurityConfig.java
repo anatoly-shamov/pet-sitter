@@ -17,7 +17,9 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
  */
 @Configuration
 // TODO 49. Enable support for Spring Security
+@EnableWebSecurity
 // TODO 50. Enable support for securing methods using annotations which expression attributes
+@EnableGlobalMethodSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -29,7 +31,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) {
         try {
             // TODO 51. Configure users john, jane and admin as described in home.jsp
-            auth.inMemoryAuthentication();
+            auth.inMemoryAuthentication()
+                .withUser("john").password("doe").roles("USER")
+                    .and()
+                .withUser("jane").password("doe").roles("USER", "ADMIN")
+                    .and()
+                .withUser("admin").password("admin").roles("ADMIN")
+            ;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,6 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 //TODO 52. All URL matching /users/show/** and /users/delete/**  must be available only to users with role ADMIN
+                .antMatchers("/users/show/**").hasAnyRole("ADMIN")
+                .antMatchers("/users/delete/**").hasAnyRole("ADMIN")
                 .antMatchers("/**").hasAnyRole("ADMIN","USER")
                 .anyRequest()
                 .authenticated()
