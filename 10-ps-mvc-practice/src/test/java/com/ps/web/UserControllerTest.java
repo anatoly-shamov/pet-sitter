@@ -9,6 +9,7 @@ import org.springframework.ui.ExtendedModelMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -39,5 +40,12 @@ public class UserControllerTest {
     @Test
     public void testFindOneHandler() throws NotFoundException {
         // TODO 47: Complete this test for the show() method of UserController
+        ExtendedModelMap model = new ExtendedModelMap();
+        Long id = 1L;
+        String viewName = userController.show(id, model);
+        User user = (User) model.get("user");
+        assertNotNull(user);
+        assertEquals(Long.valueOf(1L), user.getId());
+        assertEquals("users/show", viewName);
     }
 }

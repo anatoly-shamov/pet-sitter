@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.theme.CookieThemeResolver;
 import org.springframework.web.servlet.theme.ThemeChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 import java.util.Locale;
 
@@ -23,6 +24,7 @@ import java.util.Locale;
 @Configuration
 // TODO 45. Add the proper annotation to enable Spring @MVC
 @ComponentScan(basePackages = {"com.ps.web"})
+@EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter {
     //Declare our static resources. I added cache to the java config but it?s not required.
     @Override
@@ -48,7 +50,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public InternalResourceViewResolver getViewResolver(){
         // TODO 46. Complete the definition for a bean of type InternalResourceViewResolver that will map the requests to views
         // under '/WEB-INF/' with extension '.jsp'
-        return null; // return resolver;
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setPrefix("/WEB-INF/");
+        resolver.setSuffix(".jsp");
+        resolver.setViewClass(JstlView.class);
+        return resolver; // return resolver;
     }
 
     @Bean
